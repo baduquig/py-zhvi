@@ -23,24 +23,17 @@ def filter_data():
     
     if ((zipcode is None) and (city is None) and (state is None)):
         df['Country'] = 'US'
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
-        df = df.groupby('Country')
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'City', 'Metro', 'CountyName'], axis=1)
     elif ((zipcode is None) and (city is None)):
         df = df[df['State'] == state]
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'City', 'Metro', 'CountyName'], axis=1)
-        df = df.groupby('State')
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'Metro', 'CountyName'], axis=1)
     elif (zipcode is None):
         df = df[df['State'] == state]
         df = df[df['City'] == city]
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'Metro', 'CountyName'], axis=1)
-        df = df.groupby('City')
+        df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
     else:
-        df = df[df['State'] == state]
-        df = df[df['City'] == city]
         df = df[df['RegionName'] == zipcode]
-        df = df.groupby('RegionName')
-
-    df = df.mean()
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
 
     return jsonify(df.to_dict(orient='records'))
 
