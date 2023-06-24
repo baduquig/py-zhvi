@@ -8,13 +8,7 @@ four_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhe
 rent = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/rent.csv')
 
 
-@app.route('/zhvi')
-def filter_data():
-    dataset = request.args.get('dataset')
-    state = request.args.get('state')
-    city = request.args.get('city')
-    zipcode = request.args.get('zipcode')
-    
+def filter_data(dataset, state, city, zipcode):
     if dataset == 'three-bed':
         df = three_bed
     elif dataset == 'four-bed':
@@ -43,7 +37,25 @@ def filter_data():
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
     
-    return jsonify(list(dropdown_options), jsonify(df.to_dict(orient='records')))
+    return list(dropdown_options), jsonify(df.to_dict(orient='records'))
+
+
+@app.route('/zhvi-dropdowns')
+def return_dropdowns():
+    dataset = request.args.get('dataset')
+    state = request.args.get('state')
+    city = request.args.get('city')
+    zipcode = request.args.get('zipcode')
+    return filter_data(dataset, state, city, zipcode)[0]
+
+@app.route('/zhvi-data')
+def return_data():
+    dataset = request.args.get('dataset')
+    state = request.args.get('state')
+    city = request.args.get('city')
+    zipcode = request.args.get('zipcode')
+    
+    return filter_data(dataset, state, city, zipcode)[1]
 
 
 if __name__ == '__main__':
