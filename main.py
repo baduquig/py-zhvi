@@ -7,6 +7,7 @@ three_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywh
 four_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/4bed.csv')
 rent = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/rent.csv')
 
+
 @app.route('/zhvi')
 def filter_data():
     dataset = request.args.get('dataset')
@@ -41,8 +42,8 @@ def filter_data():
         df = df[df['RegionName'] == zipcode]
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
-    return jsonify(df.to_dict(orient='records'))
-    #return '{"dropdownOptions": ' + str(list(dropdown_options)) + ', "data": ' + str(jsonify(df.to_dict(orient='records'))) + '}'
+    
+    return list(dropdown_options, jsonify(df.to_dict(orient='records')))
 
 
 if __name__ == '__main__':
