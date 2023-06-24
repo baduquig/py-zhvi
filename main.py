@@ -23,19 +23,26 @@ def filter_data():
     
     if ((zipcode is None) and (city is None) and (state is None)):
         df['Country'] = 'US'
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'City', 'Metro', 'CountyName'], axis=1)
+        dropdown_options = df['State'].unique()
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
+        df = df.groupby('Country').mean()
     elif ((zipcode is None) and (city is None)):
         df = df[df['State'] == state]
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'Metro', 'CountyName'], axis=1)
+        dropdown_options = df['City'].unique()
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'City', 'Metro', 'CountyName'], axis=1)
+        df = df.groupby('State').mean()
     elif (zipcode is None):
         df = df[df['State'] == state]
         df = df[df['City'] == city]
-        df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
+        dropdown_options = df['RegionName'].unique()
+        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'Metro', 'CountyName'], axis=1)
+        df = df.groupby('City').mean()
     else:
         df = df[df['RegionName'] == zipcode]
-        df = df.drop(['RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
+        df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
+        df = df.groupby('RegionName').mean()
 
-    return jsonify(df.to_dict(orient='records'))
+    return dropdown_options, jsonify(df.to_dict(orient='records'))
 
 
 if __name__ == '__main__':
