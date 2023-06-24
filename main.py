@@ -43,7 +43,7 @@ def filter_data():
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
     
-    return '{} {}'.format(dropdown_options, jsonify(df.to_dict(orient='records')))
+    return '{} {}'.format(str(list(dropdown_options)), jsonify(df.to_dict(orient='records')))
 
 
 if __name__ == '__main__':
