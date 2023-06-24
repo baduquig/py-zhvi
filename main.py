@@ -3,9 +3,9 @@ import pandas as pd
 
 app = Flask(__name__)
 
-three_bed = pd.read_csv('./data/3bed.csv')
-four_bed = pd.read_csv('./data/4bed.csv')
-rent = pd.read_csv('./data/rent.csv')
+three_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/py-zhvi/main/data/3bed.csv')
+four_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/py-zhvi/main/data/4bed.csv')
+rent = pd.read_csv('https://raw.githubusercontent.com/baduquig/py-zhvi/main/data/rent.csv')
 
 @app.route('/zhvi')
 def filter_data():
@@ -41,7 +41,6 @@ def filter_data():
         df = df.groupby('RegionName')
 
     df = df.mean()
-    # df = df.transpose()
 
     return jsonify(df.to_dict(orient='records'))
 
