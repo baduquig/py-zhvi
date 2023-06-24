@@ -41,8 +41,8 @@ def filter_data():
         df = df[df['RegionName'] == zipcode]
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
-
-    return '{"dropdownOptions": ' + str(dropdown_options) + ', "data": ' + str(jsonify(df.to_dict(orient='records'))) + '}'
+    return jsonify(df.to_dict(orient='records'))
+    #return '{"dropdownOptions": ' + str(list(dropdown_options)) + ', "data": ' + str(jsonify(df.to_dict(orient='records'))) + '}'
 
 
 if __name__ == '__main__':
