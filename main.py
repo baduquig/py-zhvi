@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import json
 import pandas as pd
 
 app = Flask(__name__)
@@ -32,7 +33,7 @@ def filter_data(dataset, state, city, zipcode):
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
     
-    return str(list(dropdown_options)), jsonify(df.to_dict(orient='records'))
+    return list(dropdown_options), df
 
 
 @app.route('/zhvi-dropdowns')
@@ -41,8 +42,14 @@ def return_dropdowns():
     state = request.args.get('state')
     city = request.args.get('city')
     zipcode = request.args.get('zipcode')
+    options_dict = {}
     
-    response = filter_data(dataset, state, city, zipcode)[0]
+    options = filter_data(dataset, state, city, zipcode)[0]
+    for x in range(len(options)):
+        options_dict[options[x]] = options[x]
+    
+    response = jsonify(options_dict)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 @app.route('/zhvi-data')
@@ -52,10 +59,11 @@ def return_data():
     city = request.args.get('city')
     zipcode = request.args.get('zipcode')
 
-    response = filter_data(dataset, state, city, zipcode)[1]
-    response.headers.add('Access-Control-Allow-Origin', '*')    
+    dataframe = filter_data(dataset, state, city, zipcode)[1]
+    response = jsonify(dataframe.to_dict(orient='records'))
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
