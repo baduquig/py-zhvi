@@ -37,7 +37,7 @@ def filter_data(dataset, state, city, zipcode):
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
     
-    return str(list(dropdown_options)), jsonify(df.to_dict(orient='records'))
+    return {"dropdownOptions": list(dropdown_options)}, jsonify(df.to_dict(orient='records'))
 
 
 @app.route('/zhvi-dropdowns')
