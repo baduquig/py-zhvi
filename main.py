@@ -3,18 +3,13 @@ import pandas as pd
 
 app = Flask(__name__)
 
-three_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/3bed.csv')
-four_bed = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/4bed.csv')
-rent = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/rent.csv')
-
-
 def filter_data(dataset, state, city, zipcode):
     if dataset == 'three-bed':
-        df = three_bed
+        df = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/3bed.csv')
     elif dataset == 'four-bed':
-        df = four_bed
+        df = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/4bed.csv')
     else:
-        df = rent
+        df = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/rent.csv')
     
     if ((zipcode is None) and (city is None) and (state is None)):
         df['Country'] = 'US'
@@ -37,7 +32,7 @@ def filter_data(dataset, state, city, zipcode):
         df = df.drop(['RegionID', 'SizeRank', 'RegionType', 'StateName', 'State', 'City', 'Metro', 'CountyName'], axis=1)
         df = df.groupby('RegionName').mean()
     
-    return {"dropdownOptions": list(dropdown_options)}, jsonify(df.to_dict(orient='records'))
+    return str(list(dropdown_options)), jsonify(df.to_dict(orient='records'))
 
 
 @app.route('/zhvi-dropdowns')
@@ -48,8 +43,6 @@ def return_dropdowns():
     zipcode = request.args.get('zipcode')
     
     response = filter_data(dataset, state, city, zipcode)[0]
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
     return response
 
 @app.route('/zhvi-data')
@@ -60,8 +53,7 @@ def return_data():
     zipcode = request.args.get('zipcode')
 
     response = filter_data(dataset, state, city, zipcode)[1]
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    
+    response.headers.add('Access-Control-Allow-Origin', '*')    
     return response
 
 
