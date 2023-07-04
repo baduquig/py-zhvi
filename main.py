@@ -46,7 +46,11 @@ def return_dropdowns():
     state = request.args.get('state')
     city = request.args.get('city')
     zipcode = request.args.get('zipcode')
-    return filter_data(dataset, state, city, zipcode)[0]
+    
+    response = filter_data(dataset, state, city, zipcode)[0]
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
 
 @app.route('/zhvi-data')
 def return_data():
@@ -54,8 +58,11 @@ def return_data():
     state = request.args.get('state')
     city = request.args.get('city')
     zipcode = request.args.get('zipcode')
+
+    response = filter_data(dataset, state, city, zipcode)[1]
+    response.headers.add('Access-Control-Allow-Origin', '*')
     
-    return filter_data(dataset, state, city, zipcode)[1]
+    return response
 
 
 if __name__ == '__main__':
