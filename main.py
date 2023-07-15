@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-import json
+import math
 import pandas as pd
 
 app = Flask(__name__)
@@ -42,11 +42,9 @@ def return_dropdowns():
     state = request.args.get('state')
     city = request.args.get('city')
     zipcode = request.args.get('zipcode')
-    options_dict = {}
     
-    options = filter_data(dataset, state, city, zipcode)[0]
-    # for x in range(len(options)):
-        # options_dict[options[x]] = options[x]
+    uncleansed_options = filter_data(dataset, state, city, zipcode)[0]
+    options = [x for x in uncleansed_options if not math.isnan(x)]
     
     response = jsonify({'options': options})
     response.headers.add('Access-Control-Allow-Origin', '*')
