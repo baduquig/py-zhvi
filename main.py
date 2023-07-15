@@ -44,7 +44,7 @@ def return_dropdowns():
     zipcode = request.args.get('zipcode')
     
     uncleansed_options = filter_data(dataset, state, city, zipcode)[0]
-    options = list(filter(lambda x: not math.isnan(x), uncleansed_options))
+    options = [x for x in uncleansed_options if not math.isnan(float(x))]
     
     response = jsonify({'options': options})
     response.headers.add('Access-Control-Allow-Origin', '*')
