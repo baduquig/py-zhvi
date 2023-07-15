@@ -45,10 +45,10 @@ def return_dropdowns():
     options_dict = {}
     
     options = filter_data(dataset, state, city, zipcode)[0]
-    for x in range(len(options)):
-        options_dict[options[x]] = options[x]
+    # for x in range(len(options)):
+        # options_dict[options[x]] = options[x]
     
-    response = jsonify(options_dict)
+    response = jsonify({'options': options})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
