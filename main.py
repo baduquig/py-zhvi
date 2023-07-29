@@ -1,9 +1,22 @@
 from flask import Flask, jsonify, request
-import math
+import mysql.connector
 import pandas as pd
 
 app = Flask(__name__)
 
+# CFB Pickem Variables
+config = {
+    'user': 'sql9634488',
+    'password': '2usSRQH2hu',
+    'host': 'sql9.freemysqlhosting.net:3306',
+    'database': 'sql9634488',
+    'raise_on_warnings': True
+}
+
+
+#####################################
+# Zillow Analysis Method            #
+#####################################
 def filter_data(dataset, state, city, zipcode):
     if dataset == 'three-bed':
         df = pd.read_csv('https://raw.githubusercontent.com/baduquig/python-anywhere-projects/main/data/3bed.csv')
@@ -34,8 +47,21 @@ def filter_data(dataset, state, city, zipcode):
         df = df.groupby('RegionName').mean()
     
     return list(dropdown_options), df
+#####################################
 
 
+#####################################
+# CFB Pickem Methods                #
+#####################################
+def db_connect():
+    conn = mysql.connector.connect(**config)
+    return conn
+#####################################
+
+
+#####################################
+# Zillow Analysis Endpoints         #
+#####################################
 @app.route('/zhvi-dropdowns')
 def return_dropdowns():
     dataset = request.args.get('dataset')
@@ -66,6 +92,8 @@ def return_data():
     response = jsonify(dataframe.to_dict(orient='records'))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+#####################################
+#####################################
 
 
 if __name__ == '__main__':
