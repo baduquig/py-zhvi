@@ -1,5 +1,4 @@
-from cfb_pickem_classes.db_config import DBConfig
-from cfb_pickem_classes.user import User
+from cfb_pickem.user import User
 import json
 
 class Validate():

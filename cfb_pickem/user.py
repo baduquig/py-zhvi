@@ -1,4 +1,4 @@
-from cfb_pickem_classes.db_config import DBConfig
+from cfb_pickem.db_config import DBConfig
 
 class User():
     def __init__(self):

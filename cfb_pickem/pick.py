@@ -1,4 +1,4 @@
-from cfb_pickem_classes import DBConfig
+from cfb_pickem.db_config import DBConfig
 import json
 
 class SubmitPicks():
